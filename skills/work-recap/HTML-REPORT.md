@@ -10,7 +10,7 @@ Two readers at once: the engineer who wants the exact mechanism, and a non-techn
 
 - Lead every theme with a plain-language sentence: the effect, the user-visible or business consequence, the "so what". A non-technical reader should understand it without knowing the codebase.
 - Then give the precise mechanism for whoever wants it. Don't dumb it down — the technical specifics stay.
-- **Gloss jargon, don't strip it.** Pair a term with its consequence on first use: "_catastrophic backtracking_ (une expression régulière qui saturait le CPU)", "tickets à usage unique (un jeton qu'on ne peut utiliser qu'une fois)". Identifiers (`ClassificationSuggestionEngine`, `myged://`) stay in `font-mono` but should never be the only thing a sentence conveys.
+- **Gloss jargon, don't strip it.** Pair a term with its consequence on first use: "a _named pipe_ (a channel two processes use to talk to each other)", "single-use tickets (a token that can only be redeemed once)". Identifiers (`ClassificationSuggestionEngine`, `myged://`) stay in `font-mono` but should never be the only thing a sentence conveys. (Examples here are in English to keep the template language-agnostic; write the actual recap in the requested document language.)
 
 ## Scaffold
 
@@ -52,7 +52,7 @@ The substance, grouped by theme or area — not a flat list of commits. Each the
 
 Synthesize. Five commits on one feature are one entry, not five.
 
-What's notable about a theme — the decision made, the hard problem wrestled with, the silent bug, the surprise — belongs **inside that theme**, woven into its prose, not in a separate "notable" section. Commit bodies and scrappy `wip` commits earn their place here. State the consequence before the cause ("ça figeait un worker entier" → puis le mécanisme). Don't add a section that re-summarizes the work; the orientation is already in the overview and the substance is here.
+What's notable about a theme — the decision made, the hard problem wrestled with, the silent bug, the surprise — belongs **inside that theme**, woven into its prose, not in a separate "notable" section. Commit bodies and scrappy `wip` commits earn their place here. State the consequence before the cause (the user-visible effect first, then the mechanism). Don't add a section that re-summarizes the work; the orientation is already in the overview and the substance is here.
 
 ## Loose ends
 
@@ -61,14 +61,15 @@ If the history implies unfinished work or open questions, list them. Omit the se
 ## Style guidance
 
 - Lean editorial, not corporate-dashboard. Generous whitespace. `font-serif` headings work well with stone/slate.
-- **Colour as hierarchy, not decoration.** One accent family, used to rank the work:
-  - **Indigo** — flagship/headline work (the one or two big chantiers of the period).
-  - **Emerald** — supporting work (fixes, finishing touches, infra).
+- **Colour as hierarchy, not decoration.** One accent family, used to separate kinds of work — group by scope, don't editorialise the ranking in prose:
+  - **Indigo** — the largest themes by scope of change (most files / lines touched, or a full rewrite).
+  - **Emerald** — smaller changes (fixes, finishing touches, infra).
   - **Amber** — warnings and loose ends only.
   - Don't introduce a fourth accent; let stone/slate carry everything else.
 - **Sober editorial voice** — the register of a sharp engineer writing up the week, not a product changelog. Plain declarative sentences; let the facts carry the weight. No hedging ("it's worth noting that…"), no marketing gloss. If a sentence could be a bullet, make it a bullet; if a bullet could be cut, cut it.
+- **Neutral register — describe, don't appraise.** Never rate the work's size, difficulty, importance, or drama. Drop qualifiers like "big", "major", "catastrophic", "elegant", "nightmare", "finally" — in prose, in theme titles, and in the overview alike. Convey magnitude with checkable facts (line/file counts, commit counts, "a full rewrite") and severity with the symptom, not with adjectives. A heading names the work ("Production incident in the rule matcher"), it doesn't characterise it ("The catastrophic incident"). A fixed technical term of art is exempt: name _catastrophic backtracking_ once as the precise phenomenon, but don't echo the qualifier as editorial colour.
 - **Bold almost never** in the body prose. Highlighting a phrase in every paragraph stops meaning anything and reads as a template; the theme title and the `font-mono` touched-areas line carry the emphasis already.
-- **No formulaic scaffolding.** Avoid label-led fragments ("Symptôme : … Cause : … Correctif : …") and the same connective tics ("Le fil rouge…", "Désormais", "Enfin") reused theme after theme. Connect ideas in real sentences, and vary their length and openings — not a staccato of em-dashes, colons, and one-line fragment closers.
+- **No formulaic scaffolding.** Avoid label-led fragments ("Symptom: … Cause: … Fix: …") and the same connective tics ("The through-line…", "Now…", "Finally…") reused theme after theme. Connect ideas in real sentences, and vary their length and openings — not a staccato of em-dashes, colons, and one-line fragment closers.
 - Write all prose in the document language requested by the user — natural to a native speaker, not a translation of English phrasing.
 - **Don't translate terms of art.** Keep established technical terms in the form practitioners actually use in the target language — which for software is usually the original English: "deep link" (not "lien profond"), "named pipe", "worker", "endpoint", "cache", "commit". A literal calque nobody says reads as *less* readable, not more. Translate the prose around the term, gloss the concept once, but leave the term itself idiomatic.
 - The document is fully static — Tailwind CDN only, no scripts, no diagram libraries.
