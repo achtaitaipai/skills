@@ -2,10 +2,6 @@
 
 This file is the **editorial brief** — it owns how the recap *reads*: its audience, structure, and voice. The **visual form** lives next to it in [`SKELETON.html`](./SKELETON.html): a single self-contained HTML file (inline CSS, no framework, no external requests, no diagram libraries) with the section markup, the `.theme--*` accent classes, and the design tokens documented inline. Fill the skeleton; don't restructure it. A recap is a narrative, not architecture docs — convey structure in prose, not boxes-and-arrows.
 
-The skeleton's CSS borrows the readability fundamentals from Andy Bell's [_Some simple ways to make content look good_](https://piccalil.li/blog/some-simple-ways-to-make-content-look-good/) — a measured line length, a fluid type scale, generous line-height, and a `.flow` utility for vertical rhythm — and the accent palette from [Open Color](https://yeun.github.io/open-color/).
-
-> This is a starter brief + skeleton. Replace either to control tone, structure, and vocabulary. The skill reads this file as the editorial brief and the skeleton it names as the visual form.
-
 ## Audience — precise *and* readable by a non-technical reader
 
 Two readers at once: the engineer who wants the exact mechanism, and a non-technical reader (a manager, a client — anyone outside the codebase) who needs to know **what changed and why it matters**. Serve both, in this order:
@@ -16,12 +12,7 @@ Two readers at once: the engineer who wants the exact mechanism, and a non-techn
 
 ## Scaffold
 
-The markup and CSS live in [`SKELETON.html`](./SKELETON.html). Start from it, fill the `{{placeholders}}`, and replace the example themes — don't rewrite the CSS or restructure the layout. The pieces it gives you, and how the sections below expect you to use them:
-
-- **`<main class="flow">`** wraps a `header`, an `#overview` section, the category sections (`#features`, `#improvements`, `#fixes`, `#misc`), and `#loose-ends`. The `.flow` utility handles all vertical spacing; you don't add margins.
-- **Category sections** — each `<section class="work flow">` with an `<h2>` heading holds the theme cards for one category. Omit any category that has nothing in it.
-- **Theme cards** — one `<div class="theme theme--MODIFIER flow">` per theme, each with an `<h3>` title and one to three `<p>`. The modifier matches the category and sets the accent colour (see Style guidance). The `#misc` digest uses a single neutral `<div class="theme flow">` with a `<ul>` of one-liners instead.
-- **Inline identifiers** go in `<code>` (or `<span class="mono">`); links use a plain `<a>`.
+[`SKELETON.html`](./SKELETON.html) documents its own markup, classes, and tokens in inline comments — follow them. The contract this brief adds on top: one theme card per theme (`<h3>` + one to three `<p>`), its `.theme--*` modifier set by category (see Style guidance), and the `#misc` digest as a single neutral card with a `<ul>` of one-liners. Omit any category section with nothing in it.
 
 ## Header
 
@@ -33,7 +24,7 @@ A short paragraph — two at most. Someone who didn't follow the work reads only
 
 ## Work — grouped by category
 
-The substance, split into category sections in this order — **Features** (new capabilities), **Améliorations** (improvements to existing behaviour: perf, UX, refactor), **Fixes** (bug fixes), then an optional **Divers** digest. Omit any category that has nothing in it; never show an empty section. Within a category, order the cards biggest-first (most files / lines touched).
+The substance, split into category sections in this order — **Features** (new capabilities), **Improvements** (to existing behaviour: perf, UX, refactor), **Fixes** (bug fixes), then an optional **Misc** digest. Omit any category that has nothing in it; never show an empty section. Within a category, order the cards biggest-first (most files / lines touched).
 
 Each card:
 
@@ -42,7 +33,7 @@ Each card:
 
 Synthesize. Five commits on one feature are one card, not five. What's notable about a theme — the decision made, the hard problem wrestled with, the silent bug, the surprise — belongs **inside that card**, woven into its prose, not in a separate "notable" section. Commit bodies and scrappy `wip` commits earn their place here. State the consequence before the cause (the user-visible effect first, then the mechanism). Don't add a section that re-summarizes the work; the orientation is already in the overview and the substance is here.
 
-**Divers** keeps the recap digestible: when a category would otherwise fill with small, self-explanatory items (a dependency bump, a typo fix, a one-line tweak), collect them as a single neutral card whose `<ul>` lists them as one-liners, rather than one card each. Use it only when it genuinely earns its place — a period with no such scraps omits it.
+**Misc** keeps the recap digestible: when a category would otherwise fill with small, self-explanatory items (a dependency bump, a typo fix, a one-line tweak), collect them as a single neutral card whose `<ul>` lists them as one-liners, rather than one card each. Use it only when it genuinely earns its place — a period with no such scraps omits it.
 
 ## Loose ends
 
@@ -50,13 +41,7 @@ If the history implies unfinished work or open questions, list them. Omit the se
 
 ## Style guidance
 
-- Lean editorial, not corporate-dashboard. (The skeleton supplies the look — serif body, bold sans headings, generous whitespace; this brief governs what you write into it.)
-- **Colour by category, not decoration.** The accent comes from the card's category, applied via a `.theme--*` modifier — it follows the section the card lives in, so don't editorialise scope in prose:
-  - **`.theme--feature`** (indigo) — new capabilities (the Features section).
-  - **`.theme--improvement`** (green) — improvements to existing behaviour (the Améliorations section).
-  - **`.theme--fix`** (neutral gray) — bug fixes (the Fixes section); deliberately low-key, routine.
-  - **`.theme--warn`** (orange) — reserved for **Loose ends** / things needing attention, nothing else.
-  - The Divers digest uses a bare `.theme` (neutral). Don't introduce a fourth hue; the grays carry the rest.
+- **Colour by category, not decoration.** Pick each card's `.theme--*` class by the card's category; the skeleton defines the classes, their hues, and the discipline (no fourth hue, `--warn` for loose ends only). Let the accent — not the prose — carry scope, so don't editorialise magnitude in words.
 - **Sober editorial voice** — the register of a sharp engineer writing up the week, not a product changelog. Plain declarative sentences; let the facts carry the weight. No hedging ("it's worth noting that…"), no marketing gloss. If a sentence could be a bullet, make it a bullet; if a bullet could be cut, cut it.
 - **Neutral register — describe, don't appraise.** Never rate the work's size, difficulty, importance, or drama. Drop qualifiers like "big", "major", "catastrophic", "elegant", "nightmare", "finally" — in prose, in theme titles, and in the overview alike. Convey magnitude with checkable facts (line/file counts, commit counts, "a full rewrite") and severity with the symptom, not with adjectives. A heading names the work ("Production incident in the rule matcher"), it doesn't characterise it ("The catastrophic incident"). A fixed technical term of art is exempt: name _catastrophic backtracking_ once as the precise phenomenon, but don't echo the qualifier as editorial colour.
 - **Bold almost never** in the body prose. Highlighting a phrase in every paragraph stops meaning anything and reads as a template; the theme title carries the emphasis already.

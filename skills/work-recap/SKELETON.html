@@ -18,32 +18,30 @@
     <title>Recap — {{repo name}} — {{period}}</title>
     <style>
       :root {
-        /* ---- Surfaces & text (Open Color gray scale) ---- */
-        --bg:          #f8f9fa; /* gray-0 — page background */
-        --surface:     #f1f3f5; /* gray-1 — neutral card tint (unranked theme) */
-        --code-bg:     #e9ecef; /* gray-2 — inline code chip */
-        --border:      #dee2e6; /* gray-3 — hairline rules */
-        --text-muted:  #868e96; /* gray-6 — faint text */
-        --text-soft:   #495057; /* gray-7 — secondary text (stats, paths) */
-        --text-code:   #343a40; /* gray-8 — inline code text */
-        --text:        #212529; /* gray-9 — body text */
+        /* ---- Surfaces & text ---- */
+        --bg:          #f8f9fa;
+        --surface:     #f1f3f5;
+        --code-bg:     #e9ecef;
+        --border:      #dee2e6;
+        --text-muted:  #868e96;
+        --text-soft:   #495057;
+        --text-code:   #343a40;
+        --text:        #212529;
 
-        /* ---- Accents — by CATEGORY of change (solid + tint background). ----
-           Pick the matching .theme--* modifier by meaning, not by hue.
-           Fixes use the neutral gray (--text-muted / --surface), no token. */
-        --accent-feature:     #4263eb; --accent-feature-tint:     #edf2ff; /* indigo — new capabilities */
-        --accent-improvement: #2f9e44; --accent-improvement-tint: #ebfbee; /* green  — improvements (perf, UX, refactor) */
-        --accent-warn:        #e8590c; --accent-warn-tint:        #fff4e6; /* orange — loose ends / attention */
+        /* ---- Accents — by CATEGORY of change (see the .theme block for the mapping). ---- */
+        --accent-feature:     #4263eb; --accent-feature-tint:     #edf2ff; /* indigo */
+        --accent-improvement: #2f9e44; --accent-improvement-tint: #ebfbee; /* green  */
+        --accent-warn:        #e8590c; --accent-warn-tint:        #fff4e6; /* orange */
 
-        /* ---- Fluid major-third type scale (1.25) ---- */
+        /* ---- Fluid type scale ---- */
         --size-0: clamp(1rem, 0.96rem + 0.22vw, 1.13rem);
         --size-1: clamp(1.25rem, 1.18rem + 0.36vw, 1.47rem);
         --size-2: clamp(1.56rem, 1.43rem + 0.63vw, 1.91rem);
         --size-3: clamp(1.95rem, 1.74rem + 1.04vw, 2.48rem);
         --size-4: clamp(2.44rem, 2.11rem + 1.62vw, 3.23rem);
 
-        --measure: 70ch;     /* max line length of the whole column */
-        --flow-space: 1em;   /* default vertical rhythm (overridden per context) */
+        --measure: 70ch;
+        --flow-space: 1em;
 
         --font-body: Georgia, Cambria, "Times New Roman", serif;
         --font-head: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
@@ -72,12 +70,11 @@
         --flow-space: 4.5rem; /* between header and top-level sections */
       }
 
-      /* Vertical rhythm — every .flow child gets top margin (none on the first),
-         sized by the --flow-space in effect. Each layer sets its own scale. */
+      /* Vertical rhythm — each .flow child gets top margin sized by --flow-space. */
       .flow > * + * { margin-block-start: var(--flow-space); }
-      section      { --flow-space: 1.5em; } /* paragraph rhythm within a section */
-      section.work { --flow-space: 3rem; }  /* category section: gap between theme cards */
-      .theme       { --flow-space: 1.4em; } /* paragraph rhythm within a card */
+      section      { --flow-space: 1.5em; }
+      section.work { --flow-space: 3rem; }
+      .theme       { --flow-space: 1.4em; }
 
       h1, h2, h3 {
         font-family: var(--font-head);
@@ -107,7 +104,6 @@
         white-space: nowrap;
       }
 
-      /* Header — title, mono stat strip, then a hairline closing it off */
       header { padding-bottom: 2.25rem; border-bottom: 1px solid var(--border); }
       header h1 { --flow-space: 0; }
       header .stats {
@@ -118,8 +114,9 @@
         --flow-space: 1.25rem;
       }
 
-      /* Theme card — one .theme--* modifier sets the accent (border, title, tint).
-         Pick the modifier by kind of work; a bare .theme is neutral/unranked. */
+      /* Theme card — its .theme--* modifier sets the accent (border, title, tint),
+         chosen by the card's category (see the WORK sections below). Don't add a
+         fourth hue: .theme--warn is for loose ends only, bare .theme for Misc. */
       .theme {
         --accent: var(--text-muted); --accent-tint: var(--surface);
         border-left: 3px solid var(--accent);
@@ -133,7 +130,7 @@
       .theme--fix         { --accent: var(--text-muted);         --accent-tint: var(--surface); } /* neutral, routine */
       .theme--warn        { --accent: var(--accent-warn);        --accent-tint: var(--accent-warn-tint); }
 
-      /* Digest card ("Divers") — a tight list of small items, not full themes */
+      /* Digest card ("Misc") — a tight list of small items, not full themes */
       .theme ul { margin: 0; padding-left: 1.2em; }
       .theme li + li { margin-top: 0.4em; }
     </style>
@@ -148,21 +145,16 @@
         </p>
       </header>
 
-      <!-- OVERVIEW — one or two short paragraphs. The headline first; what was
-           worked on and what shipped. Not a theme-by-theme list. -->
+      <!-- OVERVIEW — one or two short paragraphs. -->
       <section id="overview" class="flow">
         <h2>{{Overview heading}}</h2>
         <p>{{Orientation paragraph.}}</p>
         <p>{{Optional second paragraph.}}</p>
       </section>
 
-      <!-- WORK — the substance, split into category sections, each a
-           <section class="work">. Order: Features → Améliorations → Fixes →
-           Divers. Omit any category with nothing in it. Within a category,
-           order cards biggest-first. Each card: <h3> title, 1-3 <p>.
-           Synthesize: five commits on one feature are one card, not five. -->
+      <!-- WORK — category sections below, in document order; omit any that's empty. -->
 
-      <!-- FEATURES — new capabilities. Cards use .theme--feature (indigo). -->
+      <!-- FEATURES -->
       <section id="features" class="work flow">
         <h2>{{Features heading}}</h2>
         <div class="theme theme--feature flow">
@@ -172,8 +164,7 @@
         </div>
       </section>
 
-      <!-- AMÉLIORATIONS — improvements to existing behaviour (perf, UX,
-           refactor). Cards use .theme--improvement (green). -->
+      <!-- IMPROVEMENTS -->
       <section id="improvements" class="work flow">
         <h2>{{Improvements heading}}</h2>
         <div class="theme theme--improvement flow">
@@ -182,7 +173,7 @@
         </div>
       </section>
 
-      <!-- FIXES — bug fixes. Cards use .theme--fix (neutral gray, routine). -->
+      <!-- FIXES -->
       <section id="fixes" class="work flow">
         <h2>{{Fixes heading}}</h2>
         <div class="theme theme--fix flow">
@@ -191,10 +182,9 @@
         </div>
       </section>
 
-      <!-- DIVERS — optional digest of several small items, kept terse so the
-           whole stays readable. One neutral card with a <ul>. Omit if empty. -->
+      <!-- MISC — optional digest: one neutral card with a <ul>. Omit if empty. -->
       <section id="misc" class="work flow">
-        <h2>{{Divers heading}}</h2>
+        <h2>{{Misc heading}}</h2>
         <div class="theme flow">
           <ul>
             <li>{{One-line item.}}</li>
@@ -203,8 +193,7 @@
         </div>
       </section>
 
-      <!-- LOOSE ENDS — unfinished work / open questions. Omit the whole
-           section if the history implies none. Cards use .theme--warn (orange). -->
+      <!-- LOOSE ENDS — omit the whole section if the history implies none. -->
       <section id="loose-ends" class="work flow">
         <h2>{{Loose ends heading}}</h2>
         <div class="theme theme--warn flow">
