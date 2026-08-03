@@ -1,23 +1,23 @@
 ---
 name: work-recap
-description: Generate a polished, self-contained HTML recap of git history over a time period, in any language. Use whenever the user asks to summarize or report what was shipped or changed over a window (last week, sprint review, "what changed since X", standup notes from git) — even without the word "recap".
+description: Generate a polished recap of git history over a time period — as a self-contained HTML page or a Markdown file — in any language. Use whenever the user asks to summarize or report what was shipped or changed over a window (last week, sprint review, "what changed since X", standup notes from git) — even without the word "recap".
 allowed-tools: Read, Write, Glob, Grep, Bash(git log:*), Bash(git diff:*), Bash(git rev-parse:*), Bash(open:*), Bash(xdg-open:*), Bash(start:*)
 ---
 
 # Git Recap
 
-Build a narrative recap of work done in a git repository over a time period, using the commit history as source material, and render it as a self-contained HTML document following a user-supplied template.
+Build a narrative recap of work done in a git repository over a time period, using the commit history as source material, and render it in the requested format — a self-contained HTML page or a Markdown file — following a user-supplied template.
 
 The commit history is the raw material. The template is the editorial brief. Your job is to read the history with judgment, decide what actually mattered, and tell the story in the shape the template prescribes — in the language the user asked for.
 
 ## Workflow at a glance
 
-1. Resolve parameters (period, language, author filter, template path, output path).
+1. Resolve parameters (period, language, author filter, format, template path, output path).
 2. Collect git data with the prescribed commands. Handle failures gracefully.
 3. Read the template as an editorial brief.
 4. Ground the vocabulary in the project's own docs.
 5. Generate the recap, exercising judgment over what's relevant.
-6. Write the HTML file and open it.
+6. Write the file and deliver it.
 
 ---
 
@@ -28,8 +28,9 @@ Invocation is a slash command (`/work-recap`) with flags or natural language ("r
 - **Period** — relative (`last week`, `last sprint` ≈ 14 days, `last N days`) or absolute (`--from`/`--to`). Resolve to concrete `--after`/`--before` dates against today before running git. Default: **last 7 days** (say so in the output).
 - **Language** — `--lang <code>`, else infer from the conversation, else English. Only the generated prose changes language; the template stays as-is.
 - **Author** — all authors by default; `--author <name-or-email>` restricts to one, passed through to `git log --author=`.
-- **Template** — defaults to `HTML-REPORT.md` in this skill's directory (the editorial brief, which names its skeleton). Override with `--template <path>`; if missing, see error handling.
-- **Output** — defaults to the OS temp dir, filename `<repo>-<from>_<to>.html`. Override the dir with `--output <path>`. Open it in the browser after writing.
+- **Format** — `--format html|md`, else inferred from the request ("in markdown", "as an HTML page") or from the extension of an `--output` that names a file. Default: **html**. The format selects the skeleton (step 3) and the output extension; it changes nothing about the writing.
+- **Template** — defaults to `REPORT.md` in this skill's directory (the editorial brief, shared by both formats). Override with `--template <path>`; if missing, see error handling.
+- **Output** — defaults to the OS temp dir, filename `<repo>-<from>_<to>.<html|md>` per the resolved format. Override with `--output <path>` — a directory, or a file path whose extension also settles the format.
 
 ---
 
@@ -61,10 +62,10 @@ If you can't resolve revisions cleanly from dates, fall back to per-commit `--st
 
 ## 3. Read the template (brief + skeleton)
 
-The template comes in two paired files; read both into context before writing.
+The template comes in paired files; read the brief and the skeleton for the resolved format into context before writing.
 
-- **The editorial brief** at the resolved template path is **not** a mechanical placeholder file. It describes the document's structure, audience, tone, and vocabulary, and it names its skeleton. Treat every instruction in it as binding — section order, colour discipline, forbidden phrasings, glossary terms, all of it.
-- **The skeleton** it names (default `SKELETON.html` alongside the brief) is the visual form: the HTML markup, the inline CSS, the design tokens, and the class system, documented in HTML comments. Start the output from this file — fill the `{{placeholders}}`, reuse its classes and tokens, and **don't** restructure the layout or rewrite the CSS. The output is a single self-contained HTML file unless the brief says otherwise.
+- **The editorial brief** at the resolved template path is **not** a mechanical placeholder file. It is format-agnostic: it describes the document's structure, audience, tone, and vocabulary, and it names the skeletons. Treat every instruction in it as binding — section order, category discipline, forbidden phrasings, glossary terms, all of it.
+- **The skeleton** for the resolved format (alongside the brief: `SKELETON.html` for html, `SKELETON.md` for md) is the form: the markup or heading structure and the conventions that go with it, documented in comments. Start the output from this file — fill the `{{placeholders}}`, reuse what it defines, and **don't** restructure the layout, rewrite its CSS, or shuffle its headings. The output is a single self-contained file unless the brief says otherwise.
 
 If the brief prescribes a specific vocabulary or forbids certain words, obey it exactly. If it says "no introduction paragraph, straight into X", do that. When the brief and this skill could overlap on how to phrase or emphasise something, the brief wins.
 
@@ -91,15 +92,17 @@ Everything about how the recap *reads* — section order, grouping, audience, to
 
 ---
 
-## 6. Write and open
+## 6. Write and deliver
 
-Write the HTML to the resolved output path. Then open it:
+Write the recap to the resolved output path. For **html**, open it afterwards:
 
 - macOS: `open <path>`
 - Linux: `xdg-open <path>`
 - Windows: `start <path>`
 
-Tell the user where the file is and give a one-line summary of what the recap covers (period, number of commits synthesized).
+For **md**, write the file and stop there — don't open it in a viewer.
+
+Either way, tell the user where the file is and give a one-line summary of what the recap covers (period, number of commits synthesized).
 
 ---
 
@@ -113,7 +116,7 @@ Tell the user where the file is and give a one-line summary of what the recap co
 Aim for a useful partial result over a hard failure. Specifically:
 
 - **Not a git repository** — stop and tell the user plainly they need to run this inside a git repo.
-- **Template missing** — stop and tell the user the expected path (`skills/work-recap/HTML-REPORT.md`, plus the `SKELETON.html` it names) and that they can point elsewhere with `--template`. Don't invent a template or skeleton silently.
+- **Template missing** — stop and tell the user the expected path (`skills/work-recap/REPORT.md`, plus the skeleton for the resolved format: `SKELETON.html` or `SKELETON.md`) and that they can point elsewhere with `--template`. Don't invent a template or skeleton silently.
 - **No commits in the period** — don't produce an empty document. Tell the user no commits matched, echo back the resolved date range and any author filter, and suggest the likely causes (wrong dates, wrong branch, wrong author spelling).
 - **Invalid period** — `from` after `to`, or a future start date: flag it and ask for a corrected range rather than guessing.
 - **A git command fails mid-collection** — proceed with the data you have, generate the recap, and add a visible note in the output stating which data was unavailable (e.g. "file-level stats unavailable").
@@ -121,7 +124,8 @@ Aim for a useful partial result over a hard failure. Specifically:
 
 ## Example invocations
 
-- `/work-recap last week` → English (inferred), all authors, default template, last 7 days.
-- `/work-recap --from 2026-06-01 --to 2026-06-23 --lang fr` → French recap for an explicit range.
-- "summarize what the team shipped last sprint, in Spanish" → Spanish, all authors, ~14 days.
-- `/work-recap last month --author alice@corp.com --lang en` → Alice's personal monthly recap.
+- `/work-recap last week` → English (inferred), all authors, default template, last 7 days, HTML.
+- `/work-recap --from 2026-06-01 --to 2026-06-23 --lang fr` → French recap for an explicit range, HTML.
+- `/work-recap last week --format md` → same recap as a Markdown file, written but not opened.
+- "summarize what the team shipped last sprint in Spanish, as markdown" → Spanish, all authors, ~14 days, Markdown.
+- `/work-recap last month --author alice@corp.com --output ~/notes/june.md` → Alice's monthly recap, format inferred as Markdown from the extension.

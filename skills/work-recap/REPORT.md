@@ -1,6 +1,11 @@
-# Work Recap — HTML Report Format
+# Work Recap — Report Format
 
-This file is the **editorial brief** — it owns how the recap *reads*: its audience, structure, and voice. The **visual form** lives next to it in [`SKELETON.html`](./SKELETON.html): a single self-contained HTML file (inline CSS, no framework, no external requests, no diagram libraries) with the section markup, the `.theme--*` accent classes, and the design tokens documented inline. Fill the skeleton; don't restructure it. A recap is a narrative, not architecture docs — convey structure in prose, not boxes-and-arrows.
+This file is the **editorial brief** — it owns how the recap *reads*: its audience, structure, and voice, whatever the output format. The **form** lives in the skeleton matching the requested format, next to this file:
+
+- [`SKELETON.html`](./SKELETON.html) — a single self-contained HTML file (inline CSS, no framework, no external requests, no diagram libraries), with its section markup, accent classes, and design tokens documented inline.
+- [`SKELETON.md`](./SKELETON.md) — the same document as one Markdown file, with its heading structure and conventions documented in comments.
+
+Fill the skeleton; don't restructure it. A recap is a narrative, not architecture docs — convey structure in prose, not boxes-and-arrows.
 
 ## Audience — precise *and* readable by a non-technical reader
 
@@ -8,11 +13,11 @@ Two readers at once: the engineer who wants the exact mechanism, and a non-techn
 
 - Lead every theme with a plain-language sentence: the effect, the user-visible or business consequence, the "so what". A non-technical reader should understand it without knowing the codebase.
 - Then give the precise mechanism for whoever wants it. Don't dumb it down — the technical specifics stay.
-- **Gloss jargon, don't strip it.** Pair a term with its consequence on first use: "a _named pipe_ (a channel two processes use to talk to each other)", "single-use tickets (a token that can only be redeemed once)". Identifiers (`ClassificationSuggestionEngine`, `myged://`) stay in monospace (`<code>` or `.mono`) but should never be the only thing a sentence conveys. (Examples here are in English to keep the template language-agnostic; write the actual recap in the requested document language.)
+- **Gloss jargon, don't strip it.** Pair a term with its consequence on first use: "a _named pipe_ (a channel two processes use to talk to each other)", "single-use tickets (a token that can only be redeemed once)". Identifiers (`ClassificationSuggestionEngine`, `myged://`) stay in monospace (backticks in Markdown, `<code>` or `.mono` in HTML) but should never be the only thing a sentence conveys. (Examples here are in English to keep the template language-agnostic; write the actual recap in the requested document language.)
 
 ## Scaffold
 
-[`SKELETON.html`](./SKELETON.html) documents its own markup, classes, and tokens in inline comments — follow them. The contract this brief adds on top: one theme card per theme (`<h3>` + one to three `<p>`), its `.theme--*` modifier set by category (see Style guidance), and the `#misc` digest as a single neutral card with a `<ul>` of one-liners. Omit any category section with nothing in it.
+Each skeleton documents its own markup and conventions in comments — follow them. The contract this brief adds on top is structural, and holds in both formats: one block per theme (a short title plus one to three units of prose), its category carried by whatever mechanism the skeleton provides, and the Misc digest as a single neutral block whose list holds one-liners. Omit any category section with nothing in it.
 
 ## Header
 
@@ -41,7 +46,7 @@ If the history implies unfinished work or open questions, list them. Omit the se
 
 ## Style guidance
 
-- **Colour by category, not decoration.** Pick each card's `.theme--*` class by the card's category; the skeleton defines the classes, their hues, and the discipline (no fourth hue, `--warn` for loose ends only). Let the accent — not the prose — carry scope, so don't editorialise magnitude in words.
+- **Category is signalled by the form, never by the prose.** The skeleton decides how — an accent class in HTML, the section a theme sits under in Markdown — and documents the discipline that goes with it. Don't restate a theme's category in its title or opening sentence, don't substitute emoji or badges where a format has no colour, and don't editorialise magnitude in words.
 - **Sober editorial voice** — the register of a sharp engineer writing up the week, not a product changelog. Plain declarative sentences; let the facts carry the weight. No hedging ("it's worth noting that…"), no marketing gloss. If a sentence could be a bullet, make it a bullet; if a bullet could be cut, cut it.
 - **Neutral register — describe, don't appraise.** Never rate the work's size, difficulty, importance, or drama. Drop qualifiers like "big", "major", "catastrophic", "elegant", "nightmare", "finally" — in prose, in theme titles, and in the overview alike. Convey magnitude with checkable facts (line/file counts, commit counts, "a full rewrite") and severity with the symptom, not with adjectives. A heading names the work ("Production incident in the rule matcher"), it doesn't characterise it ("The catastrophic incident"). A fixed technical term of art is exempt: name _catastrophic backtracking_ once as the precise phenomenon, but don't echo the qualifier as editorial colour.
 - **Bold almost never** in the body prose. Highlighting a phrase in every paragraph stops meaning anything and reads as a template; the theme title carries the emphasis already.
